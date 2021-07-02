@@ -1,6 +1,8 @@
 const app = require("./app");
 const debug = require("debug")("node-angular");
 const http = require("http");
+const dotenv = require('dotenv');
+dotenv.config();
 
 const normalizePort = val => {
   var port = parseInt(val, 10);
@@ -42,6 +44,7 @@ const onListening = () => {
   const bind = typeof addr === "string" ? "pipe " + addr : "port " + port;
   debug("Listening on " + bind);
 };
+
 
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);

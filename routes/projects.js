@@ -1,65 +1,41 @@
 const express = require("express");
 const router = express.Router();
-const projects= [
-  {
-    id:1,
-    title: 'First Post',
-    description: "This is the first post's content",
-    preview_picture: 'https://i.ibb.co/DkmmDq7/picture.jpg',
-    labels: ['UX', 'UI'],
-    git_url: 'url_git',
-    preview_url: '',
-    details_url: 'auxilium',
-  },
-  {
-    id:2,
-    title: 'First Post',
-    description: "This is the first post's content",
-    preview_picture: 'https://i.ibb.co/DkmmDq7/picture.jpg',
-    labels: ['Angular', 'NodeJS'],
-    git_url: 'url_git',
-    preview_url: '',
-    details_url: '',
-  },
-  {
-    id:3,
-    title: 'First Post',
-    description: "This is the first post's content",
-    preview_picture: 'https://i.ibb.co/DkmmDq7/picture.jpg',
-    labels: ['Angular'],
-    git_url: 'url_git',
-    preview_url: '',
-    details_url: '',
-  },
-  {
-    id:4,
-    title: 'First Post',
-    description: "This is the first post's content",
-    preview_picture: 'https://i.ibb.co/DkmmDq7/picture.jpg',
-    labels: ['UX'],
-    git_url: 'url_git',
-    preview_url: '',
-    details_url: '',
-  },
-  {
-    id:5,
-    title: 'First Post',
-    description: "This is the first post's content",
-    preview_picture: 'https://i.ibb.co/DkmmDq7/picture.jpg',
-    labels: ['NodeJS'],
-    git_url: '',
-    preview_url: '',
-    details_url: '',
-  },
-];
-router.use('/',(req, res, next) => {
+const Project = require("../models/project");
 
-  res.status(200).json({
-    message:"Ok",
-    projects:projects
+// Body parser
+var bodyParser = require("body-parser");
+var jsonParser = bodyParser.json();
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
+
+router.post("/", jsonParser, (req, res, next) => {
+  const project = new Project({
+    language: req.body.language,
+    name: req.body.name,
+    title: req.body.title,
+    content: req.body.content,
+    picture: {
+      url: req.body.picture.url,
+      description: req.body.picture.description,
+    },
+    labels: req.body.labels,
+    git_url: req.body.git_url,
+    details_url: req.body.details_url,
+    preview_url: req.body.preview_url,
   });
-
+  project.save();
+  res.status(200).json({
+    message: "Ok",
+    id:project._id
+  });
 });
 
+router.use("/:lang", (req, res, next) => {
+  Project.find({ "language": req.params.lang }).then((projects) => {
+    res.status(200).json({
+      message: "Ok",
+      projects: projects,
+    });
+  });
+});
 
-module.exports=router;
+module.exports = router;
