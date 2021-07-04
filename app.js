@@ -1,3 +1,4 @@
+const path=require('path')
 const express = require("express");
 const projectsRoutes = require("./routes/projects");
 const caseStudyRoutes = require("./routes/case-study");
@@ -6,6 +7,7 @@ const mongoose = require("mongoose");
 const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
+
 
 mongoose
   .connect(
@@ -33,5 +35,6 @@ app.use((req, res, next) => {
 
 app.use("/api/projects", projectsRoutes);
 app.use("/api/cases", caseStudyRoutes);
+app.use("/pictures",express.static(path.join('pictures')));
 
 module.exports = app;

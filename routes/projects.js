@@ -29,7 +29,7 @@ router.post("/", jsonParser, (req, res, next) => {
   });
 });
 
-router.use("/:lang", (req, res, next) => {
+router.get("/:lang", (req, res, next) => {
   Project.find({ "language": req.params.lang }).then((projects) => {
     res.status(200).json({
       message: "Ok",
@@ -37,5 +37,15 @@ router.use("/:lang", (req, res, next) => {
     });
   });
 });
+
+router.get("/", (req, res, next) => {
+  Project.find({ "language": req.params.lang }).then((projects) => {
+    res.status(200).json({
+      message: "Ok",
+      projects: projects,
+    });
+  });
+});
+
 
 module.exports = router;

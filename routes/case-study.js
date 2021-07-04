@@ -26,26 +26,32 @@ router.post("/", jsonParser, (req, res, next) => {
   });
 });
 
-/* router.use("/:lang", (req, res, next) => {
+ router.get("/:lang", (req, res, next) => {
   CaseStudy.find({ language: req.params.lang }).then((caseStudies) => {
     res.status(200).json({
       message: "Ok",
       caseStudies: caseStudies,
     });
   });
-}); */
+});
 
-router.use("/:lang/:id", (req, res, next) => {
-  CaseStudy.findOne({  "language": req.params.lang ,"project": ObjectId(req.params.id) }).populate("project").then((caseStudy) => {
-    console.log(caseStudy);
-    if (caseStudy) {
+router.get("/:lang/:id", (req, res, next) => {
+
+  CaseStudy.findOne(
+    { language: req.params.lang, project: ObjectId(req.params.id) },
+    function (err, user) {
+      if (!user) {
+        res.status(404).json({
+          message: "Not found",
+        });
+      }
+    }
+  ).populate("project")
+  .then((caseStudy) => {
+    if (caseStudy!=null) {
       res.status(200).json({
         message: "Ok",
         caseStudy: caseStudy,
-      });
-    } else {
-      res.status(404).json({
-        message: "Not found",
       });
     }
   });

@@ -24,11 +24,12 @@ const caseStudySchema = mongoose.Schema({
     },
     challenges: {
       title: String,
-      content: String,
+      list: [String],
     },
     start: {
       title: String,
       content: String,
+      questions: [String],
       pictures: [
         {
           url: String,
