@@ -51,6 +51,16 @@ const caseStudySchema = mongoose.Schema({
         },
       ],
     },
+    journey: {
+      title: String,
+      content: String,
+      pictures: [
+        {
+          url: String,
+          description: String,
+        },
+      ],
+    },
     sitemap: {
       title: String,
       content: String,
@@ -101,6 +111,10 @@ const caseStudySchema = mongoose.Schema({
           description: String,
         },
       ],
+    },
+    accessibility: {
+      title: String,
+      content: String
     },
     styleGuide: {
       title: String,
