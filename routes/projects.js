@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const Project = require("../models/project");
+const checkAuth = require('../middleware/check-auth.js');
 
 // Body parser
 var bodyParser = require("body-parser");
 var jsonParser = bodyParser.json();
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-router.post("/", jsonParser, (req, res, next) => {
+router.post("/",checkAuth, jsonParser, (req, res, next) => {
   const project = new Project({
     language: req.body.language,
     name: req.body.name,

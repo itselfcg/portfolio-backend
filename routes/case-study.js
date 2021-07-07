@@ -2,13 +2,13 @@ const express = require("express");
 const router = express.Router();
 const CaseStudy = require("../models/case-study");
 const ObjectId = require('mongodb').ObjectID;
-
+const checkAuth = require('../middleware/check-auth.js');
 // Body parser
 var bodyParser = require("body-parser");
 var jsonParser = bodyParser.json();
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-router.post("/", jsonParser, (req, res, next) => {
+router.post("/",checkAuth, jsonParser, (req, res, next) => {
   const caseStudy = new CaseStudy({
     language: req.body.language,
     project: req.body.project,
@@ -36,7 +36,6 @@ router.post("/", jsonParser, (req, res, next) => {
 });
 
 router.get("/:lang/:id", (req, res, next) => {
-
   CaseStudy.findOne(
     { language: req.params.lang, project: ObjectId(req.params.id) },
     function (err, user) {

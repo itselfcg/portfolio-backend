@@ -1,7 +1,9 @@
 const path=require('path')
 const express = require("express");
-const projectsRoutes = require("./routes/projects");
+const projectRoutes = require("./routes/projects");
 const caseStudyRoutes = require("./routes/case-study");
+const userRoutes = require("./routes/user");
+
 const mongoose = require("mongoose");
 
 const app = express();
@@ -11,7 +13,7 @@ dotenv.config();
 
 mongoose
   .connect(
-    "mongodb+srv://"+process.env.MONGO_DB_USERNAME+":"+process.env.MONGO_DB_PASSWORD+"@cluster0.yxlvk.mongodb.net/portfolio?retryWrites=true&w=majority"
+    "mongodb+srv://"+process.env.MONGO_DB_USERNAME+":"+process.env.MONGO_DB_PASSWORD+"@cluster0.yxlvk.mongodb.net/portfolio?retryWrites=truew=majority"
   )
   .then(() => {
     console.log("Connected to database");
@@ -33,8 +35,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/projects", projectsRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/projects", projectRoutes);
 app.use("/api/cases", caseStudyRoutes);
+
 app.use("/pictures",express.static(path.join('pictures')));
 
 module.exports = app;
