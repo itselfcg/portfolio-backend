@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const dotenv = require('dotenv');
+dotenv.config();
 
 exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then((hash) => {
@@ -31,14 +33,18 @@ exports.login = (req, res, next) => {
       if (!user) {
         return res.status(401).json({ message: "Auth failed" });
       }
-
       fetchedUser = user;
+
       return bcrypt.compare(req.body.password, user.password);
     })
-    .then((result) => {
+    .then((result) =>
+    {
+
       if (!result) {
         return res.status(401).json({ message: "Auth failed" });
       }
+
+
       const token = jwt.sign(
         { user: fetchedUser.name, id: fetchedUser._id },
         process.env.JWT_KEY,
@@ -49,6 +55,8 @@ exports.login = (req, res, next) => {
       return res.status(200).json({ token: token });
     })
     .catch((err) => {
+      console.log(err);
+
       return res.status(401).json({ message: "Auth failed" });
     });
 };
