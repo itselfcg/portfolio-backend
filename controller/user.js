@@ -4,7 +4,7 @@ const User = require("../models/user");
 const dotenv = require('dotenv');
 dotenv.config();
 
-exports.createUser = (req, res, next) => {
+exports.create = (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then((hash) => {
     const user = new User({
       name: req.body.name,
