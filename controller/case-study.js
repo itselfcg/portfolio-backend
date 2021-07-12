@@ -110,4 +110,24 @@ exports.getByParams = (req, res, next) => {
         message: "Fetching failed",
       });
     });
+
+
+};
+
+
+exports.delete = (req, res, next) => {
+  CaseStudy.deleteOne({ _id: req.params.id })
+    .then((result) => {
+      console.log(result);
+      if (result.n > 0) {
+        res.status(200).json({ message: "Deletion successful!" });
+      } else {
+        res.status(401).json({ message: "Not authorized!" });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({
+        message: "Deleting posts failed!",
+      });
+    });
 };
