@@ -52,7 +52,7 @@ exports.login = (req, res, next) => {
           expiresIn: "1h",
         }
       );
-      return res.status(200).json({ token: token });
+      return res.status(200).json({ token: token,expiresIn: 3600 });
     })
     .catch((err) => {
       console.log(err);

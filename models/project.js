@@ -11,7 +11,7 @@ const projectSchema = mongoose.Schema({
   },
   labels: [String],
   git_url: String,
-  details_url: String,
+  details: Boolean,
   preview_url: String,
 });
 
