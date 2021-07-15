@@ -24,22 +24,24 @@ exports.create = (req, res, next) => {
   for (let i = 0; i < files.length; i++) {
     if (files[i].fieldname === "user-pic-" + i) {
       var user = users.find((user) => {
-        return user.id == i;
+        return user.pictures.name == files[i].originalname;
       });
-      user.files.url = url + "/pictures/" + files[i].filename;
+      user.pictures.fileName=files[i].filename;
+      user.pictures.url = url + "/pictures/" + files[i].filename;
       continue;
     }
 
     if (files[i].fieldname === "header-pic-" + i) {
       const picture = {
-        description:files[i].filename,
-        url:url + "/pictures/" + files[i].filename
+        fileName:files[i].filename,
+        description: files[i].filename,
+        url: url + "/pictures/" + files[i].filename,
       };
       pictures.push(picture);
     }
   }
 
-  const caseStudy = new CaseStudy({
+    const caseStudy = new CaseStudy({
     language: req.body.language,
     project: req.body.project,
     title: req.body.title,
