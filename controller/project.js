@@ -42,8 +42,8 @@ exports.create = (req, res, next) => {
 };
 
 exports.update = (req, res, next) => {
-  let imagePath;
-  let description;
+  let imagePath="";
+  let description="";
 
   console.log( req.body);
 
@@ -52,8 +52,10 @@ exports.update = (req, res, next) => {
     imagePath = url + "/pictures/" + req.file.filename;
     description=req.file.originalname;
   } else {
+    if(req.body.picture){
     imagePath = req.body.picture.url;
     description = req.body.picture.description;
+    }
   }
 
 
@@ -109,7 +111,11 @@ exports.getByParams = (req, res, next) => {
   if (req.query.lang) {
     criteria.$or.push({ language: req.query.lang });
   }
+  if (req.query.details) {
+    criteria.$or.push({ details: req.query.details });
+  }
 
+  console.log(criteria);
   Project.find(criteria)
     .then((project) => {
       res.status(200).json({

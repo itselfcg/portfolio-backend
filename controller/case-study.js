@@ -3,16 +3,45 @@ const CaseStudy = require("../models/case-study");
 const ObjectId = require("mongodb").ObjectID;
 
 exports.create = (req, res, next) => {
+  console.log("Recibiendo post");
+  var users, insights, sections;
+
+  const url = req.protocol + "://" + req.get("host");
+
+  if (req.body.users) {
+    users = JSON.parse(req.body.users);
+  }
+
+  if (req.body.insights) {
+    insights = JSON.parse(req.body.insights);
+  }
+
+  if (req.body.sections) {
+    sections = JSON.parse(req.body.sections);
+  }
+
+  var pictures = req.files;
+  for (let i = 0; i < pictures.length; i++) {
+    if (pictures[i].fieldname === "user-pic-" + i) {
+      var user = users.find((user) => {
+        return user.id == i;
+      });
+      user.pictures.url = url + "/pictures/" + pictures[i].filename;
+    }
+  }
+
   const caseStudy = new CaseStudy({
     language: req.body.language,
     project: req.body.project,
     title: req.body.title,
     content: req.body.content,
-    sections: req.body.sections,
+    sections: sections,
     pictures: req.body.pictures,
     insights: req.body.insights,
-    users: req.body.users,
+    users: users,
+    insights: insights,
   });
+
   caseStudy.save();
   res.status(200).json({
     message: "Created",
@@ -110,10 +139,7 @@ exports.getByParams = (req, res, next) => {
         message: "Fetching failed",
       });
     });
-
-
 };
-
 
 exports.delete = (req, res, next) => {
   CaseStudy.deleteOne({ _id: req.params.id })
@@ -130,4 +156,21 @@ exports.delete = (req, res, next) => {
         message: "Deleting posts failed!",
       });
     });
+};
+
+exports.getSections = (req, res, next) => {
+  var sections = [];
+  CaseStudy.schema.eachPath(function (path) {
+    if (path.includes("sections")) {
+      var section = path.split(".")[1];
+      if (!sections.includes(section)) {
+        sections.push(section);
+      }
+    }
+  });
+
+  res.status(200).json({
+    message: "Ok",
+    sections: sections,
+  });
 };

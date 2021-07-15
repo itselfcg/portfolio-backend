@@ -8,7 +8,7 @@ const extractFile = require("../middleware/file");
 router.post("/", checkAuth, extractFile, ProjectController.create);
 router.put("/:id", checkAuth, extractFile, ProjectController.update);
 router.get("/all", ProjectController.getAll);
-router.get("/:id?/:lang?", ProjectController.getByParams);
+router.get("/:id?/:lang?/:details?", ProjectController.getByParams);
 router.delete("/:id", checkAuth, ProjectController.delete);
 
 module.exports = router;
