@@ -5,7 +5,7 @@ const ObjectId = require("mongodb").ObjectID;
 exports.create = (req, res, next) => {
   console.log("Recibiendo post");
   var users, insights, sections;
-
+  var pictures = [];
   const url = req.protocol + "://" + req.get("host");
 
   if (req.body.users) {
@@ -20,13 +20,22 @@ exports.create = (req, res, next) => {
     sections = JSON.parse(req.body.sections);
   }
 
-  var pictures = req.files;
-  for (let i = 0; i < pictures.length; i++) {
-    if (pictures[i].fieldname === "user-pic-" + i) {
+  var files = req.files;
+  for (let i = 0; i < files.length; i++) {
+    if (files[i].fieldname === "user-pic-" + i) {
       var user = users.find((user) => {
         return user.id == i;
       });
-      user.pictures.url = url + "/pictures/" + pictures[i].filename;
+      user.files.url = url + "/pictures/" + files[i].filename;
+      continue;
+    }
+
+    if (files[i].fieldname === "header-pic-" + i) {
+      const picture = {
+        description:files[i].filename,
+        url:url + "/pictures/" + files[i].filename
+      };
+      pictures.push(picture);
     }
   }
 
@@ -36,8 +45,7 @@ exports.create = (req, res, next) => {
     title: req.body.title,
     content: req.body.content,
     sections: sections,
-    pictures: req.body.pictures,
-    insights: req.body.insights,
+    pictures: pictures,
     users: users,
     insights: insights,
   });
