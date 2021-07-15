@@ -136,7 +136,6 @@ const caseStudySchema = mongoose.Schema({
       ],
     },
   },
-
   pictures: [
     {
       fileName:String,

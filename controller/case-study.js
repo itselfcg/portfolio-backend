@@ -3,7 +3,6 @@ const CaseStudy = require("../models/case-study");
 const ObjectId = require("mongodb").ObjectID;
 
 exports.create = (req, res, next) => {
-  console.log("Recibiendo post");
   var users, insights, sections;
   var pictures = [];
   const url = req.protocol + "://" + req.get("host");
@@ -22,26 +21,39 @@ exports.create = (req, res, next) => {
 
   var files = req.files;
   for (let i = 0; i < files.length; i++) {
-    if (files[i].fieldname === "user-pic-" + i) {
+    if (files[i].fieldname.includes("user-pic")) {
       var user = users.find((user) => {
         return user.pictures.name == files[i].originalname;
       });
-      user.pictures.fileName=files[i].filename;
+      user.pictures.fileName = files[i].filename;
       user.pictures.url = url + "/pictures/" + files[i].filename;
       continue;
     }
 
-    if (files[i].fieldname === "header-pic-" + i) {
+    if (files[i].fieldname.includes("header-pic")) {
       const picture = {
-        fileName:files[i].filename,
+        fileName: files[i].filename,
         description: files[i].filename,
         url: url + "/pictures/" + files[i].filename,
       };
       pictures.push(picture);
+      continue;
+    }
+
+    var property = files[i].fieldname.split("-")[0];
+    if (property) {
+      var index = sections[property].pictures.findIndex(
+        (picture) => picture.name == files[i].originalname
+      );
+      if (index >= 0) {
+        var picture = sections[property].pictures[index];
+        picture.fileName = files[i].filename;
+        picture.url = url + "/pictures/" + files[i].filename;
+      }
     }
   }
 
-    const caseStudy = new CaseStudy({
+   const caseStudy = new CaseStudy({
     language: req.body.language,
     project: req.body.project,
     title: req.body.title,
