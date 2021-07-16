@@ -6,8 +6,6 @@ exports.create = (req, res, next) => {
   let imagePath;
   let description;
 
-  console.log( req.body);
-
   if (req.file) {
     const url = req.protocol + "://" + req.get("host");
     imagePath = url + "/pictures/" + req.file.filename;
@@ -44,8 +42,6 @@ exports.create = (req, res, next) => {
 exports.update = (req, res, next) => {
   let imagePath="";
   let description="";
-
-  console.log( req.body);
 
   if (req.file) {
     const url = req.protocol + "://" + req.get("host");
@@ -84,8 +80,6 @@ exports.update = (req, res, next) => {
       }
     })
     .catch((error) => {
-      console.log(error);
-
       res.status(500).json({
         message: "Couldn't udpate project!",
       });
@@ -115,7 +109,6 @@ exports.getByParams = (req, res, next) => {
     criteria.$or.push({ details: req.query.details });
   }
 
-  console.log(criteria);
   Project.find(criteria)
     .then((project) => {
       res.status(200).json({
@@ -131,10 +124,8 @@ exports.getByParams = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-  console.log(123);
   Project.deleteOne({ _id: req.params.id })
     .then((result) => {
-      console.log(result);
       if (result.n > 0) {
         res.status(200).json({ message: "Deletion successful!" });
       } else {
