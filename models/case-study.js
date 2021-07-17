@@ -29,7 +29,7 @@ const caseStudySchema = mongoose.Schema({
     start: {
       title: String,
       content: String,
-      questions: [String],
+      list: [String],
       pictures: [
         {
           fileName:String,
