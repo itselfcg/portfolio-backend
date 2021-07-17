@@ -3,31 +3,43 @@ const mongoose = require("mongoose");
 const ObjectId = require("mongodb").ObjectID;
 
 exports.create = (req, res, next) => {
-  let imagePath;
-  let description;
+  var pictures, labels;
+  const url = req.protocol + "://" + req.get("host");
 
-  if (req.file) {
-    const url = req.protocol + "://" + req.get("host");
-    imagePath = url + "/pictures/" + req.file.filename;
-    description=req.file.originalname;
-  } else {
-    imagePath = req.body.picture.url;
-    description = req.body.picture.description;
+  if (req.body.pictures) {
+    pictures = req.body.pictures;
+    if (typeof pictures === "string") {
+      pictures = JSON.parse(req.body.pictures);
+    }
   }
 
+  if (req.body.labels) {
+    labels = req.body.labels;
+    if (typeof labels === "string") {
+      labels = JSON.parse(req.body.labels);
+    }
+  }
+  var files = req.files;
+  if (files) {
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].fieldname.includes("preview-pic")) {
+        var picture = pictures.find((picture) => {
+          return picture.fileName == files[i].originalname;
+        });
+        picture.fileName = files[i].filename;
+        picture.url = url + "/pictures/" + files[i].filename;
+        continue;
+      }
+    }
+  }
 
-
-  const url = req.protocol + "://" + req.get("host");
   const project = new Project({
     language: req.body.language,
     name: req.body.name,
     title: req.body.title,
     content: req.body.content,
-    picture: {
-      url: imagePath,
-      description: description,
-    },
-    labels: req.body.labels,
+    pictures: pictures,
+    labels: labels,
     git_url: req.body.git_url,
     details: req.body.details,
     preview_url: req.body.preview_url,
@@ -40,20 +52,35 @@ exports.create = (req, res, next) => {
 };
 
 exports.update = (req, res, next) => {
-  let imagePath="";
-  let description="";
+  var pictures, labels;
+  const url = req.protocol + "://" + req.get("host");
 
-  if (req.file) {
-    const url = req.protocol + "://" + req.get("host");
-    imagePath = url + "/pictures/" + req.file.filename;
-    description=req.file.originalname;
-  } else {
-    if(req.body.picture){
-    imagePath = req.body.picture.url;
-    description = req.body.picture.description;
+  if (req.body.pictures) {
+    pictures = req.body.pictures;
+    if (typeof pictures === "string") {
+      pictures = JSON.parse(req.body.pictures);
     }
   }
 
+  if (req.body.labels) {
+    labels = req.body.labels;
+    if (typeof labels === "string") {
+      labels = JSON.parse(req.body.labels);
+    }
+  }
+  var files = req.files;
+  if (files) {
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].fieldname.includes("preview-pic")) {
+        var picture = pictures.find((picture) => {
+          return picture.fileName == files[i].originalname;
+        });
+        picture.fileName = files[i].filename;
+        picture.url = url + "/pictures/" + files[i].filename;
+        continue;
+      }
+    }
+  }
 
   const project = new Project({
     _id: req.params.id,
@@ -61,14 +88,11 @@ exports.update = (req, res, next) => {
     name: req.body.name,
     title: req.body.title,
     content: req.body.content,
+    pictures: pictures,
+    labels: labels,
     git_url: req.body.git_url,
-    details_url: req.body.details_url,
+    details: req.body.details,
     preview_url: req.body.preview_url,
-    picture: {
-      url: imagePath,
-      description: description,
-    },
-    labels: req.body.labels,
   });
 
   Project.updateOne({ _id: req.params.id }, project)

@@ -5,11 +5,11 @@ const projectSchema = mongoose.Schema({
   name: String,
   title: String,
   content: String,
-  picture: {
+  pictures: [{
     fileName:String,
     url: String,
     description: String,
-  },
+  }],
   labels: [String],
   git_url: String,
   details: String,
