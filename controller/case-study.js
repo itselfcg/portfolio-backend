@@ -41,7 +41,7 @@ exports.create = (req, res, next) => {
         var user = users.find((user) => {
           return user.pictures.fileName == files[i].originalname;
         });
-        user.pictures.fileName = files[i].filename;
+        user.pictures.fileName = files[i].filename.split(".")[0];
         user.pictures.url = url + "/pictures/" + files[i].filename;
         continue;
       }
@@ -50,7 +50,7 @@ exports.create = (req, res, next) => {
         var picture = pictures.find((picture) => {
           return picture.fileName == files[i].originalname;
         });
-        picture.fileName = files[i].filename;
+        picture.fileName = files[i].filename.split(".")[0];
         picture.url = url + "/pictures/" + files[i].filename;
         continue;
       }
@@ -62,7 +62,7 @@ exports.create = (req, res, next) => {
         );
         if (index >= 0) {
           var picture = sections[property].pictures[index];
-          picture.fileName = files[i].filename;
+          picture.fileName = files[i].filename.split(".")[0];
           picture.url = url + "/pictures/" + files[i].filename;
         }
       }
@@ -105,8 +105,6 @@ exports.update = (req, res, next) => {
     if (typeof pictures === "string") {
       pictures = JSON.parse(req.body.pictures);
     }
-    console.log(pictures);
-
   }
 
   if (req.body.insights) {
@@ -130,7 +128,7 @@ exports.update = (req, res, next) => {
         var user = users.find((user) => {
           return user.pictures.fileName == files[i].originalname;
         });
-        user.pictures.fileName = files[i].filename;
+        user.pictures.fileName = files[i].filename.split(".")[0];
         user.pictures.url = url + "/pictures/" + files[i].filename;
         continue;
       }
@@ -139,7 +137,7 @@ exports.update = (req, res, next) => {
         var picture = pictures.find((picture) => {
           return picture.fileName == files[i].originalname;
         });
-        picture.fileName = files[i].filename;
+        picture.fileName = files[i].filename.split(".")[0];
         picture.url = url + "/pictures/" + files[i].filename;
         continue;
       }
@@ -151,7 +149,7 @@ exports.update = (req, res, next) => {
         );
         if (index >= 0) {
           var picture = sections[property].pictures[index];
-          picture.fileName = files[i].filename;
+          picture.fileName = files[i].filename.split(".")[0];
           picture.url = url + "/pictures/" + files[i].filename;
         }
       }

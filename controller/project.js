@@ -20,18 +20,21 @@ exports.create = (req, res, next) => {
     }
   }
   var files = req.files;
+
   if (files) {
     for (let i = 0; i < files.length; i++) {
       if (files[i].fieldname.includes("preview-pic")) {
         var picture = pictures.find((picture) => {
           return picture.fileName == files[i].originalname;
         });
-        picture.fileName = files[i].filename;
+
+        picture.fileName = files[i].filename.split(".")[0];
         picture.url = url + "/pictures/" + files[i].filename;
         continue;
       }
     }
   }
+
 
   const project = new Project({
     language: req.body.language,
@@ -75,7 +78,7 @@ exports.update = (req, res, next) => {
         var picture = pictures.find((picture) => {
           return picture.fileName == files[i].originalname;
         });
-        picture.fileName = files[i].filename;
+        picture.fileName = files[i].filename.split(".")[0];
         picture.url = url + "/pictures/" + files[i].filename;
         continue;
       }
