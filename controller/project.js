@@ -139,10 +139,10 @@ exports.getByParams = (req, res, next) => {
   }
 
   Project.find(criteria)
-    .then((project) => {
+    .then((projects) => {
       res.status(200).json({
         message: "Ok",
-        project: project,
+        projects: projects,
       });
     })
     .catch((err) => {
