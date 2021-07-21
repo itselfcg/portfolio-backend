@@ -259,19 +259,23 @@ exports.getByParams = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-  CaseStudy.deleteOne({ _id: req.params.id })
-    .then((result) => {
-      if (result.n > 0) {
-        res.status(200).json({ message: "Deletion successful!" });
-      } else {
-        res.status(401).json({ message: "Not authorized!" });
-      }
+  CaseStudy.findByIdAndDelete(req.params.id)
+    .then((caseStudy) => {
+      Project.findOneAndUpdate(
+        { _id: caseStudy.project },
+        { details: "false" },
+        function (err, doc) {
+          if (err) throw err;
+        }
+      );
+      res.status(200).json({ message: "Deletion successful!" });
     })
     .catch((error) => {
       res.status(500).json({
         message: "Deleting posts failed!",
       });
     });
+
 };
 
 exports.getSections = (req, res, next) => {
