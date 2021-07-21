@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const ObjectId = require("mongodb").ObjectID;
 
 exports.create = (req, res, next) => {
+  console.log(req.files);
+
+
   var pictures, labels;
   const url = req.protocol + "://" + req.get("host");
 
@@ -28,13 +31,12 @@ exports.create = (req, res, next) => {
           return picture.fileName == files[i].originalname;
         });
 
-        picture.fileName = files[i].filename.split(".")[0];
-        picture.url = url + "/pictures/" + files[i].filename;
+        picture.fileName = files[i].key.split(".")[0];
+        picture.url = files[i].location;
         continue;
       }
     }
   }
-
 
   const project = new Project({
     language: req.body.language,
@@ -78,8 +80,8 @@ exports.update = (req, res, next) => {
         var picture = pictures.find((picture) => {
           return picture.fileName == files[i].originalname;
         });
-        picture.fileName = files[i].filename.split(".")[0];
-        picture.url = url + "/pictures/" + files[i].filename;
+        picture.fileName = files[i].key.split(".")[0];
+        picture.url = files[i].location;
         continue;
       }
     }
