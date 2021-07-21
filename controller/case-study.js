@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const CaseStudy = require("../models/case-study");
+const Project = require("../models/project");
 const ObjectId = require("mongodb").ObjectID;
 
 exports.create = (req, res, next) => {
@@ -83,6 +84,14 @@ exports.create = (req, res, next) => {
   });
 
   caseStudy.save();
+  Project.findOneAndUpdate(
+    { _id: req.body.project },
+    { details: "true" },
+    function (err, doc) {
+      if (err) throw err;
+    }
+  );
+
   res.status(200).json({
     message: "Created",
     id: caseStudy._id,
