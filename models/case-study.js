@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
-Schema=mongoose.Schema;
+Schema = mongoose.Schema;
 
 const caseStudySchema = mongoose.Schema({
   language: String,
   project: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Project"
+    ref: "Project",
   },
   title: String,
   content: String,
@@ -32,7 +32,8 @@ const caseStudySchema = mongoose.Schema({
       list: [String],
       pictures: [
         {
-          fileName:String,
+          fileName: String,
+          key: String,
           url: String,
           description: String,
         },
@@ -47,7 +48,8 @@ const caseStudySchema = mongoose.Schema({
       content: String,
       pictures: [
         {
-          fileName:String,
+          fileName: String,
+          key: String,
           url: String,
           description: String,
         },
@@ -58,7 +60,8 @@ const caseStudySchema = mongoose.Schema({
       content: String,
       pictures: [
         {
-          fileName:String,
+          fileName: String,
+          key: String,
           url: String,
           description: String,
         },
@@ -69,7 +72,8 @@ const caseStudySchema = mongoose.Schema({
       content: String,
       pictures: [
         {
-          fileName:String,
+          fileName: String,
+          key: String,
           url: String,
           description: String,
         },
@@ -80,7 +84,8 @@ const caseStudySchema = mongoose.Schema({
       content: String,
       pictures: [
         {
-          fileName:String,
+          fileName: String,
+          key: String,
           url: String,
           description: String,
         },
@@ -91,7 +96,8 @@ const caseStudySchema = mongoose.Schema({
       content: String,
       pictures: [
         {
-          fileName:String,
+          fileName: String,
+          key: String,
           url: String,
           description: String,
         },
@@ -103,7 +109,8 @@ const caseStudySchema = mongoose.Schema({
       content: String,
       pictures: [
         {
-          fileName:String,
+          fileName: String,
+          key: String,
           url: String,
           description: String,
         },
@@ -114,7 +121,8 @@ const caseStudySchema = mongoose.Schema({
       content: String,
       pictures: [
         {
-          fileName:String,
+          fileName: String,
+          key: String,
           url: String,
           description: String,
         },
@@ -122,14 +130,15 @@ const caseStudySchema = mongoose.Schema({
     },
     accessibility: {
       title: String,
-      content: String
+      content: String,
     },
     styleGuide: {
       title: String,
       content: String,
       pictures: [
         {
-          fileName:String,
+          fileName: String,
+          key: String,
           url: String,
           description: String,
         },
@@ -138,16 +147,18 @@ const caseStudySchema = mongoose.Schema({
   },
   pictures: [
     {
-      fileName:String,
+      fileName: String,
+      key: String,
       url: String,
       description: String,
     },
   ],
   insights: [
     {
-      icon: String,
-      title: String,
-      content: String,
+      fileName: String,
+      key: String,
+      url: String,
+      description: String,
     },
   ],
   users: [
@@ -156,8 +167,9 @@ const caseStudySchema = mongoose.Schema({
       age: String,
       occupation: String,
       story: String,
-      pictures: {
-        fileName:String,
+      picture: {
+        fileName: String,
+        key: String,
         url: String,
         description: String,
       },

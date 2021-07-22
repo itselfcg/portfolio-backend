@@ -6,7 +6,8 @@ const projectSchema = mongoose.Schema({
   title: String,
   content: String,
   pictures: [{
-    fileName:String,
+    fileName: String,
+    key: String,
     url: String,
     description: String,
   }],
