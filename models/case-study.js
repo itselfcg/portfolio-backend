@@ -155,10 +155,9 @@ const caseStudySchema = mongoose.Schema({
   ],
   insights: [
     {
-      fileName: String,
-      key: String,
-      url: String,
-      description: String,
+      icon: String,
+      title: String,
+      content: String,
     },
   ],
   users: [
