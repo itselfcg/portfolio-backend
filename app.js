@@ -2,7 +2,6 @@ const path=require('path')
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const cors = require("cors");
 const projectRoutes = require("./routes/projects");
 const caseStudyRoutes = require("./routes/case-study");
 const userRoutes = require("./routes/user");
@@ -37,7 +36,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cors());
 app.use("/api/user", userRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/cases", caseStudyRoutes);

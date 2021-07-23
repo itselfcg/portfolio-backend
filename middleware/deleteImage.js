@@ -1,4 +1,3 @@
-const dotenv = require("dotenv").config();
 const aws = require("aws-sdk");
 
 const region = process.env.S3_REGION;
