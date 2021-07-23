@@ -6,11 +6,7 @@ const cors = require("cors");
 const projectRoutes = require("./routes/projects");
 const caseStudyRoutes = require("./routes/case-study");
 const userRoutes = require("./routes/user");
-const dotenv = require('dotenv');
-dotenv.config();
-
 const app = express();
-
 
 mongoose
   .connect(
