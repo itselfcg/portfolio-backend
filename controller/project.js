@@ -151,7 +151,14 @@ exports.update = (req, res, next) => {
 };
 
 exports.getAll = (req, res, next) => {
-  Project.find().then((projects) => {
+  const pageSize = +req.query.pageSize;
+  const currentPage = +req.query.currentPage;
+  const postQuery = Project.find();
+  if (pageSize && currentPage) {
+    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+  }
+
+  postQuery.then((projects) => {
     res.status(200).json({
       message: "Ok",
       projects: projects,
@@ -188,7 +195,7 @@ exports.getByParams = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-  var deleteAWS = req.query.aws==='true'?true:false;
+  var deleteAWS = req.query.aws === "true" ? true : false;
   Project.findById(req.params.id).then((project) => {
     var projectPictures = [];
     if (deleteAWS) {

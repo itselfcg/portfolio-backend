@@ -8,7 +8,7 @@ const uploadFileAWS = require("../middleware/imageUpload");
 
 router.post("/", checkAuth,uploadFileAWS,ProjectController.create);
 router.put("/:id", checkAuth, uploadFileAWS, ProjectController.update);
-router.get("/all", ProjectController.getAll);
+router.get("/all/:pageSize?/:currentPage?", ProjectController.getAll);
 router.get("/:id?/:lang?/:details?", ProjectController.getByParams);
 router.delete("/:id/:deleteAWS?", checkAuth, ProjectController.delete);
 

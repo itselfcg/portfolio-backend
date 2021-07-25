@@ -314,8 +314,14 @@ exports.getByProjectAndLanguage = (req, res, next) => {
 };
 
 exports.getAll = (req, res, next) => {
-  CaseStudy.find()
-    .populate("project")
+  const pageSize = +req.query.pageSize;
+  const currentPage = +req.query.currentPage;
+  const postQuery = CaseStudy.find().populate("project");
+  if (pageSize && currentPage) {
+    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+  }
+
+  postQuery
     .then((caseStudy) => {
       res.status(200).json({
         message: "Ok",
