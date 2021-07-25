@@ -10,7 +10,7 @@ router.post("/", checkAuth,uploadFileAWS,ProjectController.create);
 router.put("/:id", checkAuth, uploadFileAWS, ProjectController.update);
 router.get("/all", ProjectController.getAll);
 router.get("/:id?/:lang?/:details?", ProjectController.getByParams);
-router.delete("/:id", checkAuth, ProjectController.delete);
+router.delete("/:id/:deleteAWS?", checkAuth, ProjectController.delete);
 
 
 module.exports = router;

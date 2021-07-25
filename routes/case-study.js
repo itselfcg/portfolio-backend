@@ -11,6 +11,6 @@ router.get("/sections", CaseStudyController.getSections);
 router.get("/all", CaseStudyController.getAll);
 router.get("/:id?/:lang?", CaseStudyController.getByParams);
 router.get("/project/:id/:lang", CaseStudyController.getByProjectAndLanguage);
-router.delete("/:id", checkAuth, CaseStudyController.delete);
+router.delete("/:id/:deleteAWS?", checkAuth, CaseStudyController.delete);
 
 module.exports = router;

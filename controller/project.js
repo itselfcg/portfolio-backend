@@ -188,18 +188,21 @@ exports.getByParams = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
+  var deleteAWS = req.query.aws==='true'?true:false;
   Project.findById(req.params.id).then((project) => {
     var projectPictures = [];
-    for (let i = 0; i < project.pictures.length; i++) {
-      if (project.pictures[i].key) {
-        projectPictures.push({ Key: project.pictures[i].key });
+    if (deleteAWS) {
+      for (let i = 0; i < project.pictures.length; i++) {
+        if (project.pictures[i].key) {
+          projectPictures.push({ Key: project.pictures[i].key });
+        }
       }
     }
 
     Project.deleteOne({ _id: req.params.id })
       .then((result) => {
         if (result.n > 0) {
-          if (projectPictures.length > 0) {
+          if (deleteAWS && projectPictures.length > 0) {
             var map = { Objects: projectPictures };
             deleteImages(map);
           }

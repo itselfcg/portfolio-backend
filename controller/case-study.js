@@ -61,18 +61,15 @@ exports.create = (req, res, next) => {
 
       var property = files[i].fieldname.split("-")[0];
       if (property) {
-        console.log(sections[property].pictures);
         var index = sections[property].pictures.findIndex(
           (picture) => picture.fileName == files[i].originalname
         );
-        console.log(files[i]);
 
         if (index >= 0) {
           var picture = sections[property].pictures[index];
           picture.key = files[i].key;
           picture.fileName = files[i].key.split(".")[0];
           picture.url = files[i].location;
-          console.log(picture);
         }
       }
     }
@@ -269,7 +266,6 @@ exports.update = (req, res, next) => {
 
         resolve(caseStudyPictures);
       }).then((caseStudyPictures) => {
-        console.log(caseStudyPictures);
         if (caseStudyPictures.length > 0) {
           var map = { Objects: caseStudyPictures };
           deleteImages(map);
@@ -359,40 +355,44 @@ exports.getByParams = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
+  var deleteAWS = req.query.aws === "true" ? true : false;
+
   CaseStudy.findById(req.params.id)
     .then((caseStudy) => {
       var caseStudyPictures = [];
-      for (let i = 0; i < caseStudy.pictures.length; i++) {
-        if (caseStudy.pictures[i].key) {
-          caseStudyPictures.push({ Key: caseStudy.pictures[i].key });
-        }
-      }
 
-      for (let i = 0; i < caseStudy.users.length; i++) {
-        if (caseStudy.users[i].picture.key) {
-          caseStudyPictures.push({ Key: caseStudy.users[i].picture.key });
+      if (deleteAWS) {
+        for (let i = 0; i < caseStudy.pictures.length; i++) {
+          if (caseStudy.pictures[i].key) {
+            caseStudyPictures.push({ Key: caseStudy.pictures[i].key });
+          }
         }
-      }
 
-      for (var property in caseStudy.sections) {
-        if (
-          caseStudy.sections[property].pictures &&
-          caseStudy.sections[property].pictures.length > 0
-        ) {
-          for (
-            let i = 0;
-            i < caseStudy.sections[property].pictures.length;
-            i++
+        for (let i = 0; i < caseStudy.users.length; i++) {
+          if (caseStudy.users[i].picture.key) {
+            caseStudyPictures.push({ Key: caseStudy.users[i].picture.key });
+          }
+        }
+
+        for (var property in caseStudy.sections) {
+          if (
+            caseStudy.sections[property].pictures &&
+            caseStudy.sections[property].pictures.length > 0
           ) {
-            if (caseStudy.sections[property].pictures[i].key) {
-              caseStudyPictures.push({
-                Key: caseStudy.sections[property].pictures[i].key,
-              });
+            for (
+              let i = 0;
+              i < caseStudy.sections[property].pictures.length;
+              i++
+            ) {
+              if (caseStudy.sections[property].pictures[i].key) {
+                caseStudyPictures.push({
+                  Key: caseStudy.sections[property].pictures[i].key,
+                });
+              }
             }
           }
         }
       }
-
       CaseStudy.deleteOne({ _id: req.params.id })
         .then((result) => {
           if (result.n > 0) {
@@ -405,7 +405,7 @@ exports.delete = (req, res, next) => {
                     message: "Failed to update project.",
                   });
                 }
-                if (caseStudyPictures.length > 0) {
+                if (deleteAWS && caseStudyPictures.length > 0) {
                   var map = { Objects: caseStudyPictures };
                   deleteImages(map);
                 }
@@ -417,7 +417,6 @@ exports.delete = (req, res, next) => {
           }
         })
         .catch((error) => {
-          console.log(error);
           res.status(502).json({
             message: "Deleting case study failed",
           });
