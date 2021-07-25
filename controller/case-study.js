@@ -89,6 +89,7 @@ exports.create = (req, res, next) => {
     pictures: pictures,
     users: users,
     insights: insights,
+    active: req.body.active,
   });
 
   caseStudy.save();
@@ -191,6 +192,7 @@ exports.update = (req, res, next) => {
           pictures: pictures,
           users: users,
           insights: insights,
+          active: req.body.active,
         })
       );
     } catch {

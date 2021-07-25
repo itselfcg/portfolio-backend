@@ -46,6 +46,7 @@ exports.create = (req, res, next) => {
     labels: labels,
     git_url: req.body.git_url,
     details: req.body.details,
+    active: req.body.active,
     preview_url: req.body.preview_url,
   });
   project.save();
@@ -99,6 +100,7 @@ exports.update = (req, res, next) => {
           labels: labels,
           git_url: req.body.git_url,
           details: req.body.details,
+          active: req.body.active,
           preview_url: req.body.preview_url,
         }))
       );
