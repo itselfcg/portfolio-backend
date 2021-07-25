@@ -272,7 +272,6 @@ exports.update = (req, res, next) => {
         }
       });
     });
-    res.status(200).json({ message: "Updated" });
 
     CaseStudy.updateOne({ _id: req.params.id }, caseStudy)
       .then((result) => {
@@ -316,6 +315,7 @@ exports.getByProjectAndLanguage = (req, res, next) => {
 
 exports.getAll = (req, res, next) => {
   CaseStudy.find()
+    .populate("project")
     .then((caseStudy) => {
       res.status(200).json({
         message: "Ok",
