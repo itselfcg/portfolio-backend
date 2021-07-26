@@ -168,16 +168,18 @@ exports.getAll = (req, res, next) => {
 
 exports.getByParams = (req, res, next) => {
   const criteria = {};
-  criteria.$or = [];
-
+  criteria.$and = [];
   if (req.query.id && mongoose.Types.ObjectId.isValid(req.query.id)) {
-    criteria.$or.push({ _id: req.query.id });
+    criteria.$and.push({ _id: req.query.id });
   }
   if (req.query.lang) {
-    criteria.$or.push({ language: req.query.lang });
+    criteria.$and.push({ language: req.query.lang });
   }
   if (req.query.details) {
-    criteria.$or.push({ details: req.query.details });
+    criteria.$and.push({ details: req.query.details });
+  }
+  if (req.query.active) {
+    criteria.$and.push({ active: req.query.active });
   }
 
   Project.find(criteria)
