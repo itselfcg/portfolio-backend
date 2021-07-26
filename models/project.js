@@ -13,8 +13,9 @@ const projectSchema = mongoose.Schema({
   }],
   labels: [String],
   git_url: String,
-  details: String,
+  details: Boolean,
   preview_url: String,
+  active:Boolean
 });
 
 module.exports = mongoose.model("Project", projectSchema);

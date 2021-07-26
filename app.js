@@ -9,7 +9,7 @@ const app = express();
 
 mongoose
   .connect(
-    "mongodb+srv://"+process.env.MONGO_DB_USERNAME+":"+process.env.MONGO_DB_PASSWORD+"@cluster0.yxlvk.mongodb.net/portfolio?retryWrites=truew=majority"
+    "mongodb+srv://"+process.env.MONGO_DB_USERNAME+":"+process.env.MONGO_DB_PASSWORD+"@cluster0.yxlvk.mongodb.net/"+process.env.MONGO_DB_COLLECTION+"?retryWrites=truew=majority"
   )
   .then(() => {
     console.log("Connected to database");

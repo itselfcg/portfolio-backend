@@ -46,6 +46,7 @@ exports.create = (req, res, next) => {
     labels: labels,
     git_url: req.body.git_url,
     details: req.body.details,
+    active: req.body.active,
     preview_url: req.body.preview_url,
   });
   project.save();
@@ -99,6 +100,7 @@ exports.update = (req, res, next) => {
           labels: labels,
           git_url: req.body.git_url,
           details: req.body.details,
+          active: req.body.active,
           preview_url: req.body.preview_url,
         }))
       );
@@ -149,7 +151,14 @@ exports.update = (req, res, next) => {
 };
 
 exports.getAll = (req, res, next) => {
-  Project.find().then((projects) => {
+  const pageSize = +req.query.pageSize;
+  const currentPage = +req.query.currentPage;
+  const postQuery = Project.find();
+  if (pageSize && currentPage) {
+    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+  }
+
+  postQuery.then((projects) => {
     res.status(200).json({
       message: "Ok",
       projects: projects,
@@ -186,18 +195,21 @@ exports.getByParams = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
+  var deleteAWS = req.query.aws === "true" ? true : false;
   Project.findById(req.params.id).then((project) => {
     var projectPictures = [];
-    for (let i = 0; i < project.pictures.length; i++) {
-      if (project.pictures[i].key) {
-        projectPictures.push({ Key: project.pictures[i].key });
+    if (deleteAWS) {
+      for (let i = 0; i < project.pictures.length; i++) {
+        if (project.pictures[i].key) {
+          projectPictures.push({ Key: project.pictures[i].key });
+        }
       }
     }
 
     Project.deleteOne({ _id: req.params.id })
       .then((result) => {
         if (result.n > 0) {
-          if (projectPictures.length > 0) {
+          if (deleteAWS && projectPictures.length > 0) {
             var map = { Objects: projectPictures };
             deleteImages(map);
           }
