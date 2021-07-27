@@ -317,15 +317,22 @@ exports.getAll = (req, res, next) => {
   const pageSize = +req.query.pageSize;
   const currentPage = +req.query.currentPage;
   const postQuery = CaseStudy.find().populate("project");
+  let fetchedCaseStudies;
+
   if (pageSize && currentPage) {
     postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
   }
 
   postQuery
     .then((caseStudy) => {
+      fetchedCaseStudies = caseStudy;
+      return CaseStudy.countDocuments();
+    })
+    .then((count) => {
       res.status(200).json({
         message: "Ok",
-        caseStudy: caseStudy,
+        caseStudy: fetchedCaseStudies,
+        caseStudyTotal: count,
       });
     })
     .catch((err) => {
