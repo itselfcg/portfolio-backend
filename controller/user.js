@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
 
 exports.create = (req, res, next) => {
@@ -26,24 +26,57 @@ exports.create = (req, res, next) => {
   });
 };
 
+exports.changePassword = (req, res, next) => {
+  let fetchedUser;
+  User.findOne({ name: req.body.name })
+    .then((user) => {
+      if (user) {
+        fetchedUser = user;
+        return bcrypt.compare(req.body.password, user.password);
+      }
+      return null;
+    })
+    .then((result) => {
+      if (!result) {
+        return res.status(400).json({ message: "Invalid user or password" });
+      }
+
+      bcrypt.hash(req.body.newPassword, 10).then((hash) => {
+        User.updateOne(
+          { _id: fetchedUser._id },
+          { $set: { password: hash } }
+        )
+          .then((result) => {
+            res.status(200).json({
+              message: "User updated",
+            });
+          })
+          .catch((err) => {
+            res.status(500).json({
+              error: err,
+            });
+          });
+      });
+    })
+    .catch((err) => {
+      return res.status(401).json({ message: "Auth failed" });
+    });
+};
+
 exports.login = (req, res, next) => {
   let fetchedUser;
   User.findOne({ name: req.body.name })
     .then((user) => {
-      if (!user) {
-        return res.status(401).json({ message: "Auth failed" });
+      if (user) {
+        fetchedUser = user;
+        return bcrypt.compare(req.body.password, user.password);
       }
-      fetchedUser = user;
-
-      return bcrypt.compare(req.body.password, user.password);
+      return null;
     })
-    .then((result) =>
-    {
-
+    .then((result) => {
       if (!result) {
-        return res.status(401).json({ message: "Auth failed" });
+        return res.status(400).json({ message: "Auth failed" });
       }
-
 
       const token = jwt.sign(
         { user: fetchedUser.name, id: fetchedUser._id },
@@ -52,7 +85,7 @@ exports.login = (req, res, next) => {
           expiresIn: "1h",
         }
       );
-      return res.status(200).json({ token: token,expiresIn: 3600 });
+      return res.status(200).json({ token: token, expiresIn: 3600 });
     })
     .catch((err) => {
       return res.status(401).json({ message: "Auth failed" });
