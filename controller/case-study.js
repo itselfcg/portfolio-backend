@@ -79,6 +79,7 @@ exports.create = (req, res, next) => {
 
   const caseStudy = new CaseStudy({
     language: req.body.language,
+    creation_date: req.body.creation_date,
     project: req.body.project,
     title: req.body.title,
     content: req.body.content,
@@ -182,6 +183,7 @@ exports.update = (req, res, next) => {
         new CaseStudy({
           _id: req.params.id,
           language: req.body.language,
+          creation_date: req.body.creation_date,
           project: req.body.project,
           title: req.body.title,
           content: req.body.content,

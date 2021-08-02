@@ -39,6 +39,7 @@ exports.create = (req, res, next) => {
 
   const project = new Project({
     language: req.body.language,
+    creation_date: req.body.creation_date,
     name: req.body.name,
     title: req.body.title,
     content: req.body.content,
@@ -93,6 +94,7 @@ exports.update = (req, res, next) => {
         (result = new Project({
           _id: req.params.id,
           language: req.body.language,
+          creation_date: req.body.creation_date,
           name: req.body.name,
           title: req.body.title,
           content: req.body.content,
@@ -161,14 +163,14 @@ exports.getAll = (req, res, next) => {
 
   postQuery
     .then((projects) => {
-      fetchedProjects=projects;
+      fetchedProjects = projects;
       return Project.countDocuments();
     })
     .then((count) => {
       res.status(200).json({
         message: "Ok",
         projects: fetchedProjects,
-        maxProjects:count
+        maxProjects: count,
       });
     });
 };

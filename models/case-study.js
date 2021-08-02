@@ -3,7 +3,8 @@ Schema = mongoose.Schema;
 
 const caseStudySchema = mongoose.Schema({
   language: String,
-  active:Boolean,
+  creation_date: { type: Date, default: Date.now },
+  active: Boolean,
   project: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Project",
