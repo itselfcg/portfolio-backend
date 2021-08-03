@@ -39,6 +39,7 @@ exports.create = (req, res, next) => {
 
   const project = new Project({
     language: req.body.language,
+    creation_date: req.body.creation_date,
     name: req.body.name,
     title: req.body.title,
     content: req.body.content,
@@ -93,6 +94,7 @@ exports.update = (req, res, next) => {
         (result = new Project({
           _id: req.params.id,
           language: req.body.language,
+          creation_date: req.body.creation_date,
           name: req.body.name,
           title: req.body.title,
           content: req.body.content,
@@ -154,16 +156,23 @@ exports.getAll = (req, res, next) => {
   const pageSize = +req.query.pageSize;
   const currentPage = +req.query.currentPage;
   const postQuery = Project.find();
+  let fetchedProjects;
   if (pageSize && currentPage) {
     postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
   }
 
-  postQuery.then((projects) => {
-    res.status(200).json({
-      message: "Ok",
-      projects: projects,
+  postQuery
+    .then((projects) => {
+      fetchedProjects = projects;
+      return Project.countDocuments();
+    })
+    .then((count) => {
+      res.status(200).json({
+        message: "Ok",
+        projects: fetchedProjects,
+        maxProjects: count,
+      });
     });
-  });
 };
 
 exports.getByParams = (req, res, next) => {

@@ -79,6 +79,7 @@ exports.create = (req, res, next) => {
 
   const caseStudy = new CaseStudy({
     language: req.body.language,
+    creation_date: req.body.creation_date,
     project: req.body.project,
     title: req.body.title,
     content: req.body.content,
@@ -182,6 +183,7 @@ exports.update = (req, res, next) => {
         new CaseStudy({
           _id: req.params.id,
           language: req.body.language,
+          creation_date: req.body.creation_date,
           project: req.body.project,
           title: req.body.title,
           content: req.body.content,
@@ -317,15 +319,22 @@ exports.getAll = (req, res, next) => {
   const pageSize = +req.query.pageSize;
   const currentPage = +req.query.currentPage;
   const postQuery = CaseStudy.find().populate("project");
+  let fetchedCaseStudies;
+
   if (pageSize && currentPage) {
     postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
   }
 
   postQuery
     .then((caseStudy) => {
+      fetchedCaseStudies = caseStudy;
+      return CaseStudy.countDocuments();
+    })
+    .then((count) => {
       res.status(200).json({
         message: "Ok",
-        caseStudy: caseStudy,
+        caseStudy: fetchedCaseStudies,
+        caseStudyTotal: count,
       });
     })
     .catch((err) => {
