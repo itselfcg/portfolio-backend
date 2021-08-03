@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const projectSchema = mongoose.Schema({
   language: String,
-  creation_date: { type: Date, default: Date.now },
+  creation_date: Date,
   name: String,
   title: String,
   content: String,
