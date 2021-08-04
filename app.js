@@ -7,6 +7,7 @@ const projectRoutes = require("./routes/projects");
 const caseStudyRoutes = require("./routes/case-study");
 const userRoutes = require("./routes/user");
 const translationRoutes = require("./routes/translation");
+const languageRoutes = require("./routes/language");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -51,6 +52,7 @@ app.use(cors());
 app.use("/api/user", userRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/cases", caseStudyRoutes);
-app.use("/api/translation", translationRoutes);
+app.use("/api/translations", translationRoutes);
+app.use("/api/languages", languageRoutes);
 
 module.exports = app;
