@@ -1,0 +1,47 @@
+{
+  "navbar": {
+    "projects": "Proyectos",
+    "about": "Sobre",
+    "contact": "Contacto"
+  },
+  "home": {
+    "greet": "¡Hola!",
+    "presentation": "Soy Itzel.",
+    "subtitle": "Una programadora full-stack de México.",
+    "description": "Me apasiona mejorar, disfruto experimentar con tecnologías para superarme a mi misma. Me alegra que estés aquí, ¡Échale un vistazo a todo!"
+  },
+  "about": {
+    "title": "Mucho gusto.",
+    "subtitle": "Soy una programadora full-stack, que se encuentra aprendiendo de Angular actualmente.",
+    "description": "El propósito de mi carrera es crear soluciones para la vida moderna que tengan un impacto positivo en la vida de alguien.",
+    "education": "Educación",
+    "educationDescription": "Universidad Autónoma de Baja California, Ingenieria en Computación. Diciembre 2019",
+    "skills": "Habilidades",
+    "feature": "Cursos"
+  },
+  "work": {
+    "title": "Proyectos.",
+    "description": "Estos proyectos son resultado de cursos, certificaciones o simplemente yo tratando de probarme a mí misma que puedo cumplir mis objetivos.",
+    "error": "Lo siento, no encontramos resultados.",
+    "filters":"Filtros",
+    "sort":"Ordenar por:",
+    "new_asc":"Nuevos proyectos",
+    "name_asc":"Nombre: A - Z",
+    "name_desc":"Nombre: Z - A"
+  },
+  "contact": {
+    "title": "Hablemos.",
+    "subtitle": "¿Comentarios?¿Feedback?",
+    "description": "Siéntete libre de contactarme, siempre estoy abierta a aprender algo nuevo."
+  },
+  "actions": {
+    "about": "Sobre mi",
+    "work": "Proyectos",
+    "contact": "Contacto",
+    "resume": "CV",
+    "readmore": "Leer más",
+    "view": "Ver",
+    "return": "Regresar a Proyectos",
+    "all": "Todos"
+  }
+}
