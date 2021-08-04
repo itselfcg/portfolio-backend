@@ -1,14 +1,31 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const fs = require("fs");
 const Translation = require("../models/translation");
 const dotenv = require("dotenv");
 dotenv.config();
 
-exports.update = (req, res, next) => {
-  var fs = require("fs");
-  const file = req.params.languageKey;
+exports.createFile = (req, res, next) => {
+  const file = req.params.languageKey+'.json';
+  var translations = new Translation({
+    home: req.body.home,
+    about: req.body.about,
+    work: req.body.work,
+    contact: req.body.contact,
+    navbar: req.body.navbar,
+    actions: req.body.actions,
+  });
+  let stringifyFile = JSON.stringify(translations);
+  fs.writeFile("public/" + file, stringifyFile, "utf8", function (err) {
+    if (err) {
+      return res.status(500).json({ message: "Couldn't update file" });
+    }
+    res.status(200).json({ message: "File was updated" });
+  });
+};
 
-  fs.readFile("public/" + file + ".json", "utf8", function (err, data) {
+exports.updateFile = (req, res, next) => {
+  const file = req.body.fileName;
+
+  fs.readFile("public/" + file, "utf8", function (err, data) {
     if (err) {
       return res.status(400).json({ message: "File not found" });
     }
@@ -37,7 +54,7 @@ exports.update = (req, res, next) => {
     }
 
     let stringifyFile = JSON.stringify(newFile);
-    fs.writeFile("public/" + file + ".json", stringifyFile, "utf8", function (err) {
+    fs.writeFile("public/" + file, stringifyFile, "utf8", function (err) {
       if (err) {
         return res.status(500).json({ message: "Couldn't update file" });
       }
@@ -47,13 +64,35 @@ exports.update = (req, res, next) => {
 };
 
 exports.getFile = (req, res, next) => {
-  const file = req.params.languageKey;
-  var fs = require("fs");
-  fs.readFile("public/" + file + ".json", "utf8", function (err, data) {
+  const file = req.body.fileName;
+  fs.readFile("public/" + file, "utf8", function (err, data) {
     if (err) {
       return res.status(400).json({ message: "File not found" });
     }
     var result = JSON.parse(data);
     res.status(200).json({ message: "File was found", file: result });
+  });
+};
+
+exports.deleteFile = (req, res, next) => {
+  const file = req.body.fileName;
+
+  fs.stat("public/" + file, function (err, stats) {
+    if (err) {
+      return res.status(500).json({
+        message: "Couldn't find file!",
+      });
+    }
+
+    fs.unlink("public/" + file, function (err) {
+      if (err) {
+        return res.status(500).json({
+          message: "Deleting file failed!",
+        });
+      }
+      res.status(200).json({
+        message: "Ok",
+      });
+    });
   });
 };
