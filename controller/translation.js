@@ -1,10 +1,12 @@
 const fs = require("fs");
 const Translation = require("../models/translation");
 const dotenv = require("dotenv");
+const Language = require("../models/language");
+
 dotenv.config();
 
 exports.createFile = (req, res, next) => {
-  const file = req.params.languageKey+'.json';
+  const file = req.body.fileName;
   var translations = new Translation({
     home: req.body.home,
     about: req.body.about,
@@ -18,7 +20,7 @@ exports.createFile = (req, res, next) => {
     if (err) {
       return res.status(500).json({ message: "Couldn't update file" });
     }
-    res.status(200).json({ message: "File was updated" });
+    res.status(201).json({ message: "File was updated" });
   });
 };
 
@@ -27,7 +29,7 @@ exports.updateFile = (req, res, next) => {
 
   fs.readFile("public/" + file, "utf8", function (err, data) {
     if (err) {
-      return res.status(400).json({ message: "File not found" });
+      return res.status(404).json({ message: "File not found" });
     }
     var newFile = JSON.parse(data);
     var translations = new Translation({
@@ -64,35 +66,77 @@ exports.updateFile = (req, res, next) => {
 };
 
 exports.getFile = (req, res, next) => {
-  const file = req.body.fileName;
-  fs.readFile("public/" + file, "utf8", function (err, data) {
-    if (err) {
-      return res.status(400).json({ message: "File not found" });
+  const key = req.params.languageKey;
+
+  Language.findOne({ key: key }, function (error, language) {
+    if (error) {
+      return res.status(400).json({
+        message: "Couldn't find file!",
+      });
     }
-    var result = JSON.parse(data);
-    res.status(200).json({ message: "File was found", file: result });
+    if (!language) {
+      return res.status(404).json({
+        message: "Couldn't find language",
+      });
+    }
+
+    const file = language.fileName;
+    fs.readFile("public/" + file, "utf8", function (err, data) {
+      if (err) {
+        return res.status(404).json({ message: "File not found" });
+      }
+      var result = JSON.parse(data);
+      res.status(200).json({ message: "File was found", file: result });
+    });
   });
 };
 
 exports.deleteFile = (req, res, next) => {
-  const file = req.body.fileName;
+  const key = req.params.languageKey;
 
-  fs.stat("public/" + file, function (err, stats) {
-    if (err) {
-      return res.status(500).json({
+  Language.findOne({ key: key }, function (error, language) {
+    if (error) {
+      return res.status(400).json({
         message: "Couldn't find file!",
       });
     }
-
-    fs.unlink("public/" + file, function (err) {
+    if (!language) {
+      return res.status(404).json({
+        message: "Couldn't find language",
+      });
+    }
+    const file = language.fileName;
+    fs.stat("public/" + file, function (err, stats) {
       if (err) {
-        return res.status(500).json({
-          message: "Deleting file failed!",
+        return res.status(400).json({
+          message: "Couldn't find file!",
         });
       }
-      res.status(200).json({
-        message: "Ok",
+
+      fs.unlink("public/" + file, function (err) {
+        if (err) {
+          return res.status(500).json({
+            message: "Deleting file failed!",
+          });
+        }
+        return res.status(200).json({
+          message: "Ok",
+        });
       });
     });
+  });
+};
+
+exports.getSections = (req, res, next) => {
+  var sections = [];
+  Translation.schema.eachPath(function (path) {
+    if (!path.includes("_")) {
+      sections.push(path);
+    }
+  });
+
+  res.status(200).json({
+    message: "Ok",
+    sections: sections,
   });
 };
