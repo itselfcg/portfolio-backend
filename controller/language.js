@@ -61,7 +61,6 @@ exports.getAll = (req, res, next) => {
     });
 };
 
-
 exports.getID = (req, res, next) => {
   Language.findOne({ _id: req.params.id })
     .then((language) => {
@@ -76,7 +75,6 @@ exports.getID = (req, res, next) => {
       });
     });
 };
-
 
 exports.delete = (req, res, next) => {
   Language.deleteOne({ _id: req.params.id })

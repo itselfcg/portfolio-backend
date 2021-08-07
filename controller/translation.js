@@ -86,7 +86,8 @@ exports.getFile = (req, res, next) => {
         return res.status(404).json({ message: "File not found" });
       }
       var result = JSON.parse(data);
-      res.status(200).json({ message: "File was found", file: result });
+      result.fileName=language.fileName;
+      res.status(200).json({result });
     });
   });
 };
