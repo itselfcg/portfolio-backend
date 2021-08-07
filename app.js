@@ -44,10 +44,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/user", userRoutes);
-app.use("/api/projects", projectRoutes);
-app.use("/api/cases", caseStudyRoutes);
-app.use("/api/translations", translationRoutes);
-app.use("/api/languages", languageRoutes);
+app.use("/user", userRoutes);
+app.use("/projects", projectRoutes);
+app.use("/cases", caseStudyRoutes);
+app.use("/translations", translationRoutes);
+app.use("/languages", languageRoutes);
 
 module.exports = app;
