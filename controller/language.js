@@ -1,6 +1,3 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const User = require("../models/user");
 const Language = require("../models/language");
 
 exports.create = (req, res, next) => {

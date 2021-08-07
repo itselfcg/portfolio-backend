@@ -44,7 +44,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cors());
 app.use("/api/user", userRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/cases", caseStudyRoutes);
