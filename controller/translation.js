@@ -24,41 +24,21 @@ exports.createFile = (req, res, next) => {
 exports.updateFile = (req, res, next) => {
   const file = req.body.fileName;
 
-  fs.readFile("public/" + file, "utf8", function (err, data) {
+  var translations = new Translation({
+    home: req.body.home,
+    about: req.body.about,
+    work: req.body.work,
+    contact: req.body.contact,
+    navbar: req.body.navbar,
+    actions: req.body.actions,
+  });
+
+  let stringifyFile = JSON.stringify(translations);
+  fs.writeFile("public/" + file, stringifyFile, "utf8", function (err) {
     if (err) {
-      return res.status(404).json({ message: "File not found" });
+      return res.status(500).json({ message: "Couldn't update file" });
     }
-    var newFile = JSON.parse(data);
-    var translations = new Translation({
-      home: req.body.home,
-      about: req.body.about,
-      work: req.body.work,
-      contact: req.body.contact,
-      navbar: req.body.navbar,
-      actions: req.body.actions,
-    });
-
-    var fieldsNew = Object.keys(translations.toObject());
-
-    for (let i = 0; i < fieldsNew.length; i++) {
-      for (let fieldsOriginal in newFile) {
-        if (fieldsNew[i] === fieldsOriginal) {
-          for (let propObject in translations[fieldsOriginal]) {
-            newFile[fieldsOriginal][propObject] =
-              translations[fieldsOriginal][propObject];
-          }
-          break;
-        }
-      }
-    }
-
-    let stringifyFile = JSON.stringify(newFile);
-    fs.writeFile("public/" + file, stringifyFile, "utf8", function (err) {
-      if (err) {
-        return res.status(500).json({ message: "Couldn't update file" });
-      }
-      res.status(200).json({ message: "File was updated" });
-    });
+    res.status(200).json({ message: "File was updated" });
   });
 };
 
