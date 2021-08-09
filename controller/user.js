@@ -8,7 +8,9 @@ exports.create = (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then((hash) => {
     const user = new User({
       name: req.body.name,
+      username: req.body.username,
       password: hash,
+      role: req.body.role,
     });
 
     user
@@ -28,7 +30,7 @@ exports.create = (req, res, next) => {
 
 exports.changePassword = (req, res, next) => {
   let fetchedUser;
-  User.findOne({ name: req.body.name })
+  User.findOne({ username: req.body.username })
     .then((user) => {
       if (user) {
         fetchedUser = user;
@@ -42,10 +44,7 @@ exports.changePassword = (req, res, next) => {
       }
 
       bcrypt.hash(req.body.newPassword, 10).then((hash) => {
-        User.updateOne(
-          { _id: fetchedUser._id },
-          { $set: { password: hash } }
-        )
+        User.updateOne({ _id: fetchedUser._id }, { $set: { password: hash } })
           .then((result) => {
             res.status(200).json({
               message: "User updated",
@@ -65,7 +64,7 @@ exports.changePassword = (req, res, next) => {
 
 exports.login = (req, res, next) => {
   let fetchedUser;
-  User.findOne({ name: req.body.name })
+  User.findOne({ username: req.body.username })
     .then((user) => {
       if (user) {
         fetchedUser = user;
@@ -79,13 +78,16 @@ exports.login = (req, res, next) => {
       }
 
       const token = jwt.sign(
-        { user: fetchedUser.name, id: fetchedUser._id },
+        { user: fetchedUser.name, id: fetchedUser._id,role:fetchedUser.role },
         process.env.JWT_KEY,
         {
           expiresIn: "1h",
         }
       );
-      return res.status(200).json({ token: token, expiresIn: 3600 });
+      fetchedUser.password = "";
+      return res
+        .status(200)
+        .json({ user: fetchedUser, token: token, expiresIn: 3600 });
     })
     .catch((err) => {
       return res.status(401).json({ message: "Auth failed" });
